@@ -13,7 +13,7 @@ exports.build = async function() {
 }
 
 exports.copyHTML = async function() {
-  const {stdout} = await promisify(proc.exec)("cp -uvr web/*.html web/img web/fonts build");
+  const {stdout} = await promisify(proc.exec)("cp -uvr web/*.html web/img web/fonts web/sounds build");
   console.log(stdout);
 }
 

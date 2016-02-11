@@ -72,3 +72,7 @@ function callMethod(name, args) {
     return obj[name].apply(obj, args);
   };
 }
+
+function assert(truth) {
+  if (!truth) alert(new Error("Assertion failed").stack);
+}

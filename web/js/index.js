@@ -77,8 +77,16 @@ this.startRecording = function(event) {
   if (!this.primaryInterface) this.primaryInterface = event.type;
   if (event.type == this.primaryInterface) {
     //audioContext must be created by user action
-    if (!window.AudioContext) alert("HERE");
-    this.audioContext = new AudioContext();
+    if (!this.audioContext) {
+      assert(window.AudioContext);
+      this.audioContext = new AudioContext();
+    }
+
+    //first-time activate audio element by user action
+    if (!this.audio.src) {
+      this.audio.src = "sounds/silence.mp3";
+      this.audio.play();
+    }
 
     this.handleEvent("onStartRecording");
     if (event.type == "mousedown") $("body").one("mouseup", this.handleEvent.bind(this, "onStopRecording"));
