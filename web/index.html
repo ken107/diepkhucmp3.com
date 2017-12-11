@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="js/pack.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/index.js"></script>
+  <script src="https://cdn.rawgit.com/ken107/databind-js/master/databind.js"></script>
 </head>
 <body>
-  
+  <input type="button" bind-statement-1="thisElem.value = #recording ? 'stop' : 'record'"
+    bind-event-click="if (recording) {submit(recording.stop()); recording=null} else record().then(x => recording = x)"/>
 </body>
 </html>
