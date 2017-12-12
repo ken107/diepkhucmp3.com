@@ -23,7 +23,7 @@ function record() {
     var capture = audioContext.createScriptProcessor(16384, 1, 1);
     var chunks = [];
     capture.onaudioprocess = function(event) {
-      chunks.push(event.inputBuffer.getChannelData(0));
+      chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
     }
     source.connect(capture);
     capture.connect(audioContext.destination);
@@ -35,19 +35,5 @@ function record() {
         return chunks;
       }
     }
-  })
-}
-
-function ajaxPut(sUrl, oData) {
-  return new Promise(function(fulfill, reject) {
-    var xhr = new XMLHttpRequest();
-    xhr.open("PUT", sUrl, true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState == XMLHttpRequest.DONE) {
-        if (xhr.status == 200) fulfill(xhr.responseText);
-        else reject(new Error(xhr.responseText));
-      }
-    };
-    xhr.send(oData);
   })
 }
