@@ -2,7 +2,10 @@
 recording = null;
 
 function submit(chunks) {
-  ajaxPut("http://localhost:30112/put", new Blob(chunks));
+  console.log(chunks.length, "chunks");
+  var output = normalizeToS16(downSample(chunks, 3));
+  ajaxPut("http://localhost:30112/put", new Blob([output]));
+  //ajaxPut("http://localhost:30112/put", new Blob(chunks));
 }
 
 function record() {
