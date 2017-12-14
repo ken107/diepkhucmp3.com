@@ -2,10 +2,11 @@
 recording = null;
 
 function submit(chunks) {
-  console.log(chunks.length, "chunks");
   var output = normalizeToS16(downSample(chunks, 3));
-  ajaxPut("http://localhost:30112/put", new Blob([output]));
-  //ajaxPut("http://localhost:30112/put", new Blob(chunks));
+  ajaxPut("http://localhost:8080/diepkhuc-mp3/voice-search", new Blob([output]))
+    .then(function(result) {
+      console.log(result);
+    })
 }
 
 function record() {
