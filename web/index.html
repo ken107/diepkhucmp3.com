@@ -19,21 +19,31 @@
   <script src="js/util.js"></script>
   <script src="js/index.js"></script>
 </head>
-<body>
+<body bind-event-mouseup="searchClient.stopRecording()"
+  bind-event-touchup="searchClient.stopRecording()">
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="#">DiepKhuc MP3</a>
     <form class="form-inline">
       <button type="button" class="btn btn-warning mr-2">
         <i class="material-icons md-18">search</i>
-        <span>Search</span>
+        <span class="d-none d-sm-inline-block">Search</span>
       </button>
       <button type="button" class="btn btn-info">
         <i class="material-icons md-18">playlist_play</i>
-        <span>Playlist</span>
+        <span class="d-none d-sm-inline-block">Playlist</span>
       </button>
     </form>
   </nav>
-  <input type="button" bind-statement-1="thisElem.value = #recording ? 'stop' : 'record'"
-    bind-event-click="if (recording) {submit(recording.stop()); recording=null} else record().then(x => recording = x)"/>
+  <div class="alert alert-success">
+    &#x27ab;
+    &quot;<span id="query">Quang Dung Vi Do La Em</span>&quot;
+  </div>
+  <div class="navbar navbar-dark fixed-bottom">
+    <button type="button" class="btn btn-danger btn-block btn-record"
+      bind-event-mousedown="searchClient.startRecording()"
+      bind-event-touchdown="searchClient.startRecording()">
+      <i class="material-icons md-18">mic</i>
+    </button>
+  </div>
 </body>
 </html>

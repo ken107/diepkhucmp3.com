@@ -8,6 +8,39 @@ function getUserMedia(options) {
   })
 }
 
+function getMicrophone() {
+  return getUserMedia({
+    "audio": {
+      "mandatory": {
+        "googEchoCancellation": "false",
+        "googAutoGainControl": "false",
+        "googNoiseSuppression": "false",
+        "googHighpassFilter": "false"
+      },
+      "optional": []
+    },
+  })
+}
+
+function startCapture(microphone) {
+  var audioContext = new AudioContext();
+  var source = audioContext.createMediaStreamSource(microphone);
+  var capture = audioContext.createScriptProcessor(16384, 1, 1);
+  var chunks = [];
+  capture.onaudioprocess = function(event) {
+    chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
+  };
+  source.connect(capture);
+  capture.connect(audioContext.destination);
+  return {
+    finish: function() {
+      source.disconnect();
+      capture.disconnect();
+      return chunks;
+    }
+  }
+}
+
 function ajaxPut(sUrl, oData) {
   return new Promise(function(fulfill, reject) {
     var xhr = new XMLHttpRequest();
@@ -47,4 +80,10 @@ function normalizeToS16(f32Array) {
     s16Array[i] = f32Array[i] * scaleFactor;
   }
   return s16Array;
+}
+
+function callMethod(name, args) {
+  return function(obj) {
+    return obj[name].apply(obj, args);
+  };
 }

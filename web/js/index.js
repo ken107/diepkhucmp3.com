@@ -1,43 +1,53 @@
 
-recording = null;
-
-function submit(chunks) {
-  var output = normalizeToS16(downSample(chunks, 3));
-  ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search", new Blob([output]))
-    .then(function(result) {
-      console.log(result);
-    })
-}
-
-function record() {
-  return getUserMedia({
-    "audio": {
-      "mandatory": {
-        "googEchoCancellation": "false",
-        "googAutoGainControl": "false",
-        "googNoiseSuppression": "false",
-        "googHighpassFilter": "false"
-      },
-      "optional": []
+var searchClient = new function() {
+  var states = {
+    IDLE: {
+      onStartRecording: function() {
+        this.state = states.ACQUIRING;
+        getMicrophone().then(handleEvent.bind(this, "onMicrophone"));
+      }
     },
-  })
-  .then(function(webcam) {
-    var audioContext = new AudioContext();
-    var source = audioContext.createMediaStreamSource(webcam);
-    var capture = audioContext.createScriptProcessor(16384, 1, 1);
-    var chunks = [];
-    capture.onaudioprocess = function(event) {
-      chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
-    }
-    source.connect(capture);
-    capture.connect(audioContext.destination);
-    return {
-      stop: function() {
-        webcam.getTracks().forEach(function(track) {track.stop()});
-        source.disconnect();
-        capture.disconnect();
-        return chunks;
+    ACQUIRING: {
+      onMicrophone: function(microphone) {
+        this.state = states.RECORDING;
+        this.microphone = microphone;
+        this.capture = startCapture(microphone);
+      },
+      onStopRecording: function() {
+        //TODO
+      }
+    },
+    RECORDING: {
+      onStopRecording: function() {
+        this.state = states.SEARCHING;
+        this.microphone.getTracks().forEach(callMethod("stop"));
+        var audioChunks = this.capture.finish();
+        voiceSearch(audioChunks).then(handleEvent.bind(this, "onSearchResult"));
+      }
+    },
+    SEARCHING: {
+      onSearchResult: function(result) {
+        this.state = states.IDLE;
+        this.result = result;
+      },
+      onStartRecording: function() {
+        //TODO
       }
     }
-  })
+  };
+
+  this.state = "IDLE";
+  this.startRecording = handleEvent.bind(this, "onStartRecording");
+  this.stopRecording = handleEvent.bind(this, "onStopRecording");
+
+  function handleEvent(name) {
+    var handler = states[this.state][name];
+    if (handler) return handler.apply(this, Array.prototype.slice.call(arguments, 1));
+    else throw new Error("Unexpected event " + name + " in state " + this.state);
+  }
+
+  function voiceSearch(audioChunks) {
+    var output = normalizeToS16(downSample(audioChunks, 3));
+    return ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search", new Blob([output]))
+  }
 }
