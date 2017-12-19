@@ -3,7 +3,7 @@ recording = null;
 
 function submit(chunks) {
   var output = normalizeToS16(downSample(chunks, 3));
-  ajaxPut("http://localhost:8080/diepkhuc-mp3/voice-search", new Blob([output]))
+  ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search", new Blob([output]))
     .then(function(result) {
       console.log(result);
     })
