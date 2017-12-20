@@ -1,4 +1,27 @@
 
+body {
+  background-color: #eee;
+}
+
+.page {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 56px;
+  bottom: 56px;
+}
+.page > .content {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+.page > table.content {
+  color: #ccc;
+  font-size: xx-large;
+  font-weight: bold;
+  text-shadow: 1px 1px 0 white;
+}
+
 button > .material-icons {
   vertical-align: bottom;
 }

@@ -8,8 +8,8 @@
   <meta property="og:title" content="DiepKhuc MP3">
   <meta property="og:description" content="Nghe nhạc, tìm nhạc, playlist">
 
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="css/common.css">
   <link rel="stylesheet" href="css/index.css">
 
   <script src="js/jquery-3.2.1.slim.js"></script>
@@ -19,29 +19,78 @@
   <script src="js/util.js"></script>
   <script src="js/index.js"></script>
 </head>
-<body bind-event-mouseup="searchClient.stopRecording()"
-  bind-event-touchup="searchClient.stopRecording()">
+<body bind-event-mouseup="if (primaryInterface.is('MOUSE')) searchClient.stopRecording()"
+  bind-event-touchend="if (primaryInterface.is('TOUCH')) searchClient.stopRecording()">
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="#">DiepKhuc MP3</a>
     <form class="form-inline">
-      <button type="button" class="btn btn-warning mr-2">
+      <button type="button" class="btn btn-warning mr-2"
+        bind-statement-1="$(thisElem).toggle(#currentPage != 'SEARCH')">
         <i class="material-icons md-18">search</i>
         <span class="d-none d-sm-inline-block">Search</span>
       </button>
-      <button type="button" class="btn btn-info">
+      <button type="button" class="btn btn-info"
+        bind-statement-1="$(thisElem).toggle(#currentPage != 'PLAYLIST')">
         <i class="material-icons md-18">playlist_play</i>
         <span class="d-none d-sm-inline-block">Playlist</span>
       </button>
     </form>
   </nav>
-  <div class="alert alert-success">
-    &#x27ab;
-    &quot;<span id="query">Quang Dung Vi Do La Em</span>&quot;
+  <div class="page search"
+    bind-statement-1="$(thisElem).toggle(#currentPage == 'SEARCH')">
+    <table class="content"
+      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'IDLE')">
+      <tr>
+        <td>
+          Nhấn nút đỏ<br/>
+          và đọc tên bài hát
+        </td>
+      </tr>
+    </table>
+    <table class="content"
+      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'ACQUIRING' || #searchClient.state == 'ACQUIRING_CANCELED')">
+      <tr>
+        <td>
+          Đang chờ Micro
+        </td>
+      </tr>
+    </table>
+    <table class="content"
+      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'RECORDING')">
+      <tr>
+        <td>
+          Đang nghe
+        </td>
+      </tr>
+    </table>
+    <table class="content"
+      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'SEARCHING')">
+      <tr>
+        <td>
+          <img src="img/ajax_loader_gray_128.gif" />
+        </td>
+      </tr>
+    </table>
+    <div class="content"
+      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'RESULT')">
+      <div class="alert alert-success"
+        bind-statement-1="$(thisElem).toggle(!!#searchClient.result.query)">
+        <i class="material-icons" style="font-size: inherit; vertical-align: middle;">search</i>
+        &quot;<span id="query">{{#searchClient.result.query}}</span>&quot;
+      </div>
+      <div class="alert alert-warning"
+        bind-statement-1="$(thisElem).toggle(!#searchClient.result.query)">
+        <span>Hổng nghe gì hết, xin xem lại micro.</span>
+      </div>
+    </div>
+  </div>
+  <div class="page playlist"
+    bind-statement-1="$(thisElem).toggle(#currentPage == 'PLAYLIST')">
   </div>
   <div class="navbar navbar-dark fixed-bottom">
     <button type="button" class="btn btn-danger btn-block btn-record"
-      bind-event-mousedown="searchClient.startRecording()"
-      bind-event-touchdown="searchClient.startRecording()">
+      bind-event-mousedown="primaryInterface.setOnce('MOUSE'); if (primaryInterface.is('MOUSE')) searchClient.startRecording()"
+      bind-event-touchstart="primaryInterface.setOnce('TOUCH'); if (primaryInterface.is('TOUCH')) searchClient.startRecording()">
       <i class="material-icons md-18">mic</i>
     </button>
   </div>
