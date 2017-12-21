@@ -6,48 +6,50 @@ searchClient = new function() {
     IDLE: {
       onStartRecording: function() {
         this.state = "ACQUIRING";
-        console.log(this.state);
         getMicrophone().then(handleEvent.bind(this, "onMicrophone"));
       }
     },
     ACQUIRING: {
       onMicrophone: function(microphone) {
         this.state = "RECORDING";
-        console.log(this.state);
         this.microphone = microphone;
         this.capture = startCapture(microphone);
+        this.capturingSince = new Date().getTime();
       },
       onStopRecording: function() {
         this.state = "ACQUIRING_CANCELED";
-        console.log(this.state);
       }
     },
     ACQUIRING_CANCELED: {
       onMicrophone: function(microphone) {
         microphone.getTracks().forEach(callMethod("stop"));
         this.state = "IDLE";
-        console.log(this.state);
       }
     },
     RECORDING: {
       onStopRecording: function() {
         this.microphone.getTracks().forEach(callMethod("stop"));
-        var audioChunks = this.capture.finish();
-        if (audioChunks.length) {
-          this.state = "SEARCHING";
-          console.log(this.state);
-          voiceSearch(audioChunks).then(handleEvent.bind(this, "onSearchResult"));
+        var elapsed = new Date().getTime() - this.capturingSince;
+        if (elapsed > 500) {
+          this.state = "RECORDING_STOPPING";
+          setTimeout(handleEvent.bind(this, "onRecordingStopped"), 500);
         }
         else {
+          this.capture.finish();
           this.state = "IDLE";
-          console.log(this.state);
         }
+      }
+    },
+    RECORDING_STOPPING: {
+      onRecordingStopped: function() {
+        var audioChunks = this.capture.finish();
+        this.state = "SEARCHING";
+        voiceSearch(audioChunks).then(handleEvent.bind(this, "onSearchResult"));
       }
     },
     SEARCHING: {
       onSearchResult: function(result) {
         this.state = "RESULT";
-        console.log(this.state);
         this.result = result;
       },
       onStartRecording: function() {
@@ -74,11 +76,18 @@ searchClient = new function() {
   }
 }
 
-var primaryInterface = {
-  is: function(x) {
-    return this.value == x;
-  },
-  setOnce: function(x) {
-    if (!this.value) this.value = x;
+var primaryInterface;
+
+function startRecording(event) {
+  if (!primaryInterface) primaryInterface = event.type;
+  if (event.type == primaryInterface) {
+    searchClient.startRecording();
+    if (event.type == "mousedown") $("body").one("mouseup", searchClient.stopRecording.bind(searchClient));
+    if (event.type == "touchstart") $("body").one("touchend", searchClient.stopRecording.bind(searchClient));
   }
+}
+
+function printStateTransition(state) {
+  var time = new Date().getTime() %1000000 /1000;
+  console.log(time.toFixed(1), state);
 }

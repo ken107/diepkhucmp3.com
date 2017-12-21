@@ -19,8 +19,7 @@
   <script src="js/util.js"></script>
   <script src="js/index.js"></script>
 </head>
-<body bind-event-mouseup="if (primaryInterface.is('MOUSE')) searchClient.stopRecording()"
-  bind-event-touchend="if (primaryInterface.is('TOUCH')) searchClient.stopRecording()">
+<body bind-statement-1="printStateTransition(#searchClient.state)">
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="#">DiepKhuc MP3</a>
     <form class="form-inline">
@@ -64,7 +63,7 @@
       </tr>
     </table>
     <table class="content"
-      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'SEARCHING')">
+      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'RECORDING_STOPPING' || #searchClient.state == 'SEARCHING')">
       <tr>
         <td>
           <img src="img/ajax_loader_gray_128.gif" />
@@ -73,24 +72,31 @@
     </table>
     <div class="content"
       bind-statement-1="$(thisElem).toggle(#searchClient.state == 'RESULT')">
-      <div class="alert alert-success"
+      <div class="alert alert-success mb-0"
         bind-statement-1="$(thisElem).toggle(!!#searchClient.result.query)">
         <i class="material-icons" style="font-size: inherit; vertical-align: middle;">search</i>
         &quot;<span id="query">{{#searchClient.result.query}}</span>&quot;
       </div>
-      <div class="alert alert-warning"
+      <div class="alert alert-warning mb-0"
         bind-statement-1="$(thisElem).toggle(!#searchClient.result.query)">
         <span>Hổng nghe gì hết, xin xem lại micro.</span>
       </div>
+      <ul class="list-group">
+        <li class="list-group-item"
+          bind-repeater-i="#searchClient.result.results.length"
+          bind-var-item="#searchClient.result.results[#i]">
+          {{#item.title}}
+        </li>
+      </ul>
     </div>
   </div>
   <div class="page playlist"
     bind-statement-1="$(thisElem).toggle(#currentPage == 'PLAYLIST')">
   </div>
-  <div class="navbar navbar-dark fixed-bottom">
+  <div class="navbar navbar-dark fixed-bottom bg-light">
     <button type="button" class="btn btn-danger btn-block btn-record"
-      bind-event-mousedown="primaryInterface.setOnce('MOUSE'); if (primaryInterface.is('MOUSE')) searchClient.startRecording()"
-      bind-event-touchstart="primaryInterface.setOnce('TOUCH'); if (primaryInterface.is('TOUCH')) searchClient.startRecording()">
+      bind-event-mousedown="startRecording(event)"
+      bind-event-touchstart="startRecording(event)">
       <i class="material-icons md-18">mic</i>
     </button>
   </div>
