@@ -76,6 +76,15 @@ searchClient = new function() {
   }
 }
 
+playlist = new function() {
+  this.items = [];
+
+  this.add = function(item) {
+    this.items.push(item);
+  }
+}
+
+
 var primaryInterface;
 
 function startRecording(event) {

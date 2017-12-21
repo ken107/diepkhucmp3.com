@@ -29,7 +29,7 @@
         <span class="d-none d-sm-inline-block">Search</span>
       </button>
       <button type="button" class="btn btn-info"
-        bind-statement-1="$(thisElem).toggle(#currentPage != 'PLAYLIST')">
+        bind-statement-1="$(thisElem).toggle(#currentPage != 'PLAYLIST' && #playlist.items.length > 0)">
         <i class="material-icons md-18">playlist_play</i>
         <span class="d-none d-sm-inline-block">Playlist</span>
       </button>

@@ -25,7 +25,7 @@ function getMicrophone() {
 function startCapture(microphone) {
   var audioContext = window.myAudioContext || (window.myAudioContext = new AudioContext());
   var source = audioContext.createMediaStreamSource(microphone);
-  var capture = audioContext.createScriptProcessor(16384, 1, 1);
+  var capture = audioContext.createScriptProcessor(8192, 1, 1);
   var chunks = [];
   capture.onaudioprocess = function(event) {
     chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
