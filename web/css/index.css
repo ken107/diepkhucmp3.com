@@ -23,6 +23,9 @@ body {
   text-shadow: 1px 1px 0 white;
 }
 
+button {
+  cursor: pointer;
+}
 button > .material-icons {
   vertical-align: bottom;
 }
