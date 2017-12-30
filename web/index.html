@@ -10,95 +10,28 @@
 
   <link rel="stylesheet" href="css/bootstrap.css">
   <link rel="stylesheet" href="css/common.css">
+  <link rel="stylesheet" href="css/components.css">
   <link rel="stylesheet" href="css/index.css">
 
-  <script src="js/jquery-3.2.1.slim.js"></script>
+  <script src="js/jquery.js"></script>
   <script src="js/popper.js"></script>
   <script src="js/bootstrap.js"></script>
   <script src="js/databind.js"></script>
   <script src="js/util.js"></script>
+  <script src="js/components.js"></script>
   <script src="js/index.js"></script>
 </head>
-<body bind-statement-1="printStateTransition(#searchClient.state)">
-  <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">DiepKhuc MP3</a>
-    <form class="form-inline">
-      <button type="button" class="btn btn-warning mr-2"
-        bind-statement-1="$(thisElem).toggle(#currentPage != 'SEARCH')">
-        <i class="material-icons md-18">search</i>
-        <span class="d-none d-sm-inline-block">Search</span>
-      </button>
-      <button type="button" class="btn btn-info"
-        bind-statement-1="$(thisElem).toggle(#currentPage != 'PLAYLIST' && #playlist.items.length > 0)">
-        <i class="material-icons md-18">playlist_play</i>
-        <span class="d-none d-sm-inline-block">Playlist</span>
-      </button>
-    </form>
-  </nav>
-  <div class="page search"
+<body>
+  <div bind-view="NavBar"
+    bind-param-show-search-button="#currentPage != 'SEARCH'"
+    bind-param-show-playlist-button="#currentPage != 'PLAYLIST' && #playlist.items.length > 0">
+  </div>
+  <div bind-view="SearchPage"
     bind-statement-1="$(thisElem).toggle(#currentPage == 'SEARCH')">
-    <table class="content"
-      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'IDLE')">
-      <tr>
-        <td>
-          Nhấn nút đỏ<br/>
-          và đọc tên bài hát
-        </td>
-      </tr>
-    </table>
-    <table class="content"
-      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'ACQUIRING' || #searchClient.state == 'ACQUIRING_CANCELED')">
-      <tr>
-        <td>
-          Đang chờ Micro
-        </td>
-      </tr>
-    </table>
-    <table class="content"
-      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'RECORDING')">
-      <tr>
-        <td>
-          Đang nghe
-        </td>
-      </tr>
-    </table>
-    <table class="content"
-      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'RECORDING_STOPPING' || #searchClient.state == 'SEARCHING')">
-      <tr>
-        <td>
-          <img src="img/ajax_loader_gray_128.gif" />
-        </td>
-      </tr>
-    </table>
-    <div class="content"
-      bind-statement-1="$(thisElem).toggle(#searchClient.state == 'RESULT')">
-      <div class="alert alert-success mb-0"
-        bind-statement-1="$(thisElem).toggle(!!#searchClient.result.query)">
-        <i class="material-icons" style="font-size: inherit; vertical-align: middle;">search</i>
-        &quot;<span id="query">{{#searchClient.result.query}}</span>&quot;
-      </div>
-      <div class="alert alert-warning mb-0"
-        bind-statement-1="$(thisElem).toggle(!#searchClient.result.query)">
-        <span>Hổng nghe gì hết, xin xem lại micro.</span>
-      </div>
-      <ul class="list-group">
-        <li class="list-group-item"
-          bind-repeater-i="#searchClient.result.results.length"
-          bind-var-item="#searchClient.result.results[#i]">
-          {{#item.title}}
-        </li>
-      </ul>
-    </div>
   </div>
-  <div class="page playlist"
+  <div bind-view="PlaylistPage"
+    bind-param-items="#playlist.items"
     bind-statement-1="$(thisElem).toggle(#currentPage == 'PLAYLIST')">
-  </div>
-  <div class="navbar navbar-dark fixed-bottom bg-light">
-    <button type="button" class="btn btn-danger btn-block btn-record"
-      bind-event-mousedown="startRecording(event)"
-      bind-event-touchstart="startRecording(event)">
-      <i class="material-icons md-18">mic</i>
-    </button>
   </div>
 </body>
 </html>

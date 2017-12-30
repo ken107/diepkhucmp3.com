@@ -1,0 +1,106 @@
+
+<nav data-class="NavBar" class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">DiepKhuc MP3</a>
+  <form class="form-inline">
+    <button type="button" class="btn btn-warning mr-2"
+      bind-statement-1="$(thisElem).toggle(#showSearchButton)">
+      <i class="material-icons md-18">search</i>
+      <span class="d-none d-sm-inline-block">Search</span>
+    </button>
+    <button type="button" class="btn btn-info"
+      bind-statement-1="$(thisElem).toggle(#showPlaylistButton)">
+      <i class="material-icons md-18">playlist_play</i>
+      <span class="d-none d-sm-inline-block">Playlist</span>
+    </button>
+  </form>
+</nav>
+
+
+<div data-class="SearchPage" class="page search"
+  bind-statement-1="this.printStateTransition(#state)">
+  <table class="content"
+    bind-statement-1="$(thisElem).toggle(#state == 'IDLE')">
+    <tr>
+      <td>
+        Nhấn nút đỏ<br/>
+        và đọc tên bài hát
+      </td>
+    </tr>
+  </table>
+  <table class="content"
+    bind-statement-1="$(thisElem).toggle(#state == 'ACQUIRING' || #state == 'ACQUIRING_CANCELED')">
+    <tr>
+      <td>
+        Đang chờ Micro
+      </td>
+    </tr>
+  </table>
+  <table class="content"
+    bind-statement-1="$(thisElem).toggle(#state == 'RECORDING')">
+    <tr>
+      <td>
+        Đang nghe
+      </td>
+    </tr>
+  </table>
+  <table class="content"
+    bind-statement-1="$(thisElem).toggle(#state == 'RECORDING_STOPPING' || #state == 'SEARCHING')">
+    <tr>
+      <td>
+        <img src="img/ajax_loader_gray_128.gif" />
+      </td>
+    </tr>
+  </table>
+  <div class="content"
+    bind-statement-1="$(thisElem).toggle(#state == 'RESULT')">
+    <div class="alert alert-success mb-0"
+      bind-statement-1="$(thisElem).toggle(!!#result.query)">
+      <i class="material-icons" style="font-size: inherit; vertical-align: middle;">search</i>
+      &quot;<span id="query">{{#result.query}}</span>&quot;
+    </div>
+    <div class="alert alert-warning mb-0"
+      bind-statement-1="$(thisElem).toggle(!#result.query)">
+      <span>Hổng nghe gì hết, xin xem lại micro.</span>
+    </div>
+    <ul class="list-group" bind-var-items="#result.results">
+      <li class="list-group-item"
+        bind-repeater-i="#items.length"
+        bind-var-item="#items[#i]">
+        <table>
+          <tr>
+            <td class="text">{{#item.title}}</td>
+            <td class="check">
+              <i class="material-icons"
+                bind-statement-1="thisElem.innerHTML = 'add'"></i>
+            </td>
+          </tr>
+        </table>
+      </li>
+    </ul>
+  </div>
+  <div class="navbar navbar-dark fixed-bottom bg-light">
+    <button type="button" class="btn btn-danger btn-block btn-record"
+      bind-event-mousedown="this.startRecording()"
+      bind-event-touchstart="this.startRecording()">
+      <i class="material-icons md-18">mic</i>
+    </button>
+  </div>
+</div>
+
+
+<div data-class="PlaylistPage" class="page playlist">
+  <ul class="list-group">
+    <li class="list-group-item"
+      bind-repeater-i="#items.length"
+      bind-var-item="#items[#i]">
+      <table>
+        <tr>
+          <td class="text">{{#item.title}}</td>
+          <td class="check">
+            <i class="material-icons">clear</i>
+          </td>
+        </tr>
+      </table>
+    </li>
+  </ul>
+</div>
