@@ -24,14 +24,21 @@
 <body>
   <div bind-view="NavBar"
     bind-param-show-search-button="#currentPage != 'SEARCH'"
-    bind-param-show-playlist-button="#currentPage != 'PLAYLIST' && #playlist.items.length > 0">
+    bind-param-show-playlist-button="#currentPage != 'PLAYLIST' && #playlist.items.length > 0"
+    bind-event-search="currentPage = 'SEARCH'"
+    bind-event-playlist="currentPage = 'PLAYLIST'">
   </div>
   <div bind-view="SearchPage"
-    bind-statement-1="$(thisElem).toggle(#currentPage == 'SEARCH')">
+    bind-param-selected="#playlist.selected"
+    bind-statement-1="$(thisElem).toggle(#currentPage == 'SEARCH')"
+    bind-event-select="playlist.play(event.data)"
+    bind-event-add="playlist.toggle(event.data)">
   </div>
   <div bind-view="PlaylistPage"
     bind-param-items="#playlist.items"
-    bind-statement-1="$(thisElem).toggle(#currentPage == 'PLAYLIST')">
+    bind-statement-1="$(thisElem).toggle(#currentPage == 'PLAYLIST')"
+    bind-event-select="playlist.play(event.data)"
+    bind-event-remove="playlist.toggle(event.data)">
   </div>
 </body>
 </html>

@@ -73,9 +73,9 @@ function SearchPage() {
   this.state = "RESULT";
   this.result = {
     results: [
-      {title: "Quang Dung - Nhung Tinh Khuc Vuot Thoi Gian"},
-      {title: "Tuan Ngoc - Vet Thu Tren Lung Ngua Hoang"},
-      {title: "Quang Le - Xuan Nay Con Khong Ve"}
+      {title: "Quang Dung - Nhung Tinh Khuc Vuot Thoi Gian", id: 1},
+      {title: "Tuan Ngoc - Vet Thu Tren Lung Ngua Hoang", id: 2},
+      {title: "Quang Le - Xuan Nay Con Khong Ve", id: 3}
     ]
   };
 

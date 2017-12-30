@@ -1,14 +1,17 @@
 
-<nav data-class="NavBar" class="navbar navbar-dark bg-dark">
+<nav data-class="NavBar" class="navbar navbar-dark bg-dark"
+  bind-var-view-root="thisElem">
   <a class="navbar-brand" href="#">DiepKhuc MP3</a>
   <form class="form-inline">
-    <button type="button" class="btn btn-warning mr-2"
-      bind-statement-1="$(thisElem).toggle(#showSearchButton)">
+    <button type="button" class="btn btn-warning ml-2"
+      bind-statement-1="$(thisElem).toggle(#showSearchButton)"
+      bind-event-click="$(#viewRoot).triggerHandler('search')">
       <i class="material-icons md-18">search</i>
       <span class="d-none d-sm-inline-block">Search</span>
     </button>
-    <button type="button" class="btn btn-info"
-      bind-statement-1="$(thisElem).toggle(#showPlaylistButton)">
+    <button type="button" class="btn btn-info ml-2"
+      bind-statement-1="$(thisElem).toggle(#showPlaylistButton)"
+      bind-event-click="$(#viewRoot).triggerHandler('playlist')">
       <i class="material-icons md-18">playlist_play</i>
       <span class="d-none d-sm-inline-block">Playlist</span>
     </button>
@@ -17,6 +20,7 @@
 
 
 <div data-class="SearchPage" class="page search"
+  bind-var-view-root="thisElem"
   bind-statement-1="this.printStateTransition(#state)">
   <table class="content"
     bind-statement-1="$(thisElem).toggle(#state == 'IDLE')">
@@ -68,10 +72,12 @@
         bind-var-item="#items[#i]">
         <table>
           <tr>
-            <td class="text">{{#item.title}}</td>
-            <td class="check">
+            <td class="text"
+              bind-event-click="$(#viewRoot).triggerHandler('select', #item)">{{#item.title}}</td>
+            <td class="check"
+              bind-event-click="$(#viewRoot).triggerHandler('add', #item)">
               <i class="material-icons"
-                bind-statement-1="thisElem.innerHTML = 'add'"></i>
+                bind-statement-1="thisElem.innerHTML = #selected[#item.id] ? 'check' : 'add'"></i>
             </td>
           </tr>
         </table>
@@ -88,15 +94,18 @@
 </div>
 
 
-<div data-class="PlaylistPage" class="page playlist">
+<div data-class="PlaylistPage" class="page playlist"
+  bind-var-view-root="thisElem">
   <ul class="list-group">
     <li class="list-group-item"
       bind-repeater-i="#items.length"
       bind-var-item="#items[#i]">
       <table>
         <tr>
-          <td class="text">{{#item.title}}</td>
-          <td class="check">
+          <td class="text"
+            bind-event-click="$(#viewRoot).triggerHandler('select', #item)">{{#item.title}}</td>
+          <td class="check"
+            bind-event-click="$(#viewRoot).triggerHandler('remove', #item)">
             <i class="material-icons">clear</i>
           </td>
         </tr>
