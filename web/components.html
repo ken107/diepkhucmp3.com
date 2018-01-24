@@ -58,26 +58,27 @@
   <div class="content"
     bind-statement-1="$(thisElem).toggle(#state == 'RESULT')">
     <div class="alert alert-success mb-0"
-      bind-statement-1="$(thisElem).toggle(!!#result.query)">
+      bind-statement-1="$(thisElem).toggle(!!#query)">
       <i class="material-icons" style="font-size: inherit; vertical-align: middle;">search</i>
-      &quot;<span id="query">{{#result.query}}</span>&quot;
+      &quot;<span id="query">{{#query}}</span>&quot;
     </div>
     <div class="alert alert-warning mb-0"
-      bind-statement-1="$(thisElem).toggle(!#result.query)">
+      bind-statement-1="$(thisElem).toggle(!#query)">
       <span>Hổng nghe gì hết, xin xem lại micro.</span>
     </div>
-    <ul class="list-group" bind-var-items="#result.results">
+    <ul class="list-group">
       <li class="list-group-item"
         bind-repeater-i="#items.length"
-        bind-var-item="#items[#i]">
+        bind-var-item="#items[#i]"
+        bind-statement-1="$(thisElem).toggleClass('active', #item.id == #activeItem.id)">
         <table>
           <tr>
             <td class="text"
               bind-event-click="$(#viewRoot).triggerHandler('select', #item)">{{#item.title}}</td>
             <td class="check"
-              bind-event-click="$(#viewRoot).triggerHandler('add', #item)">
+              bind-event-click="$(#viewRoot).triggerHandler('toggle', #item)">
               <i class="material-icons"
-                bind-statement-1="thisElem.innerHTML = #selected[#item.id] ? 'check' : 'add'"></i>
+                bind-statement-1="thisElem.innerHTML = #addedIds[#item.id] ? 'check' : 'add'"></i>
             </td>
           </tr>
         </table>
@@ -86,8 +87,8 @@
   </div>
   <div class="navbar navbar-dark fixed-bottom bg-light">
     <button type="button" class="btn btn-danger btn-block btn-record"
-      bind-event-mousedown="this.startRecording()"
-      bind-event-touchstart="this.startRecording()">
+      bind-event-mousedown="this.startRecording(event)"
+      bind-event-touchstart="this.startRecording(event)">
       <i class="material-icons md-18">mic</i>
     </button>
   </div>
@@ -99,7 +100,8 @@
   <ul class="list-group">
     <li class="list-group-item"
       bind-repeater-i="#items.length"
-      bind-var-item="#items[#i]">
+      bind-var-item="#items[#i]"
+      bind-statement-1="$(thisElem).toggleClass('active', #item.id == #activeItem.id)">
       <table>
         <tr>
           <td class="text"

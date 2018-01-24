@@ -45,7 +45,6 @@ button > .material-icons {
   font-size: 2rem;
   padding: 0 0 0 1px;
   text-align: center;
-  background: #636c72;
-  color: white;
+  color: lightgray;
   border-radius: 0 .25rem .25rem 0;
 }

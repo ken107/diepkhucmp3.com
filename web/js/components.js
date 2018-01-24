@@ -12,7 +12,7 @@ function NavBar() {
 }
 
 
-function SearchPage() {
+function SearchPage(viewRoot) {
   var states = {
     IDLE: {
       onStartRecording: function() {
@@ -61,7 +61,11 @@ function SearchPage() {
     SEARCHING: {
       onSearchResult: function(result) {
         this.state = "RESULT";
-        this.result = result;
+        this.query = result.query;
+        this.items = result.results;
+        if (this.query && this.items.length && isExactMatch(this.items[0].title, this.query)) {
+          $(viewRoot).triggerHandler('select', this.items[0]);
+        }
       },
       onStartRecording: function() {
         //TODO
@@ -70,14 +74,9 @@ function SearchPage() {
   };
 
   states.RESULT = states.IDLE;
-  this.state = "RESULT";
-  this.result = {
-    results: [
-      {title: "Quang Dung - Nhung Tinh Khuc Vuot Thoi Gian", id: 1},
-      {title: "Tuan Ngoc - Vet Thu Tren Lung Ngua Hoang", id: 2},
-      {title: "Quang Le - Xuan Nay Con Khong Ve", id: 3}
-    ]
-  };
+  this.state = "IDLE";
+  this.query = null;
+  this.items = null;
 
   this.startRecording = function(event) {
     if (!this.primaryInterface) this.primaryInterface = event.type;
@@ -103,6 +102,14 @@ function SearchPage() {
     var output = normalizeToS16(downSample(audioChunks, 3));
     return ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search", new Blob([output]))
       .then(JSON.parse)
+  }
+
+  function isExactMatch(title, query) {
+    const tokens = title.toUpperCase().split(/\W+/);
+    return query.toUpperCase().split(/\W+/)
+      .every(function(token) {
+        return tokens.indexOf(token) != -1;
+      })
   }
 }
 

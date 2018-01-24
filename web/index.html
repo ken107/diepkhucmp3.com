@@ -19,16 +19,18 @@
     bind-event-playlist="currentPage = 'PLAYLIST'">
   </div>
   <div bind-view="SearchPage"
-    bind-param-selected="#playlist.selected"
+    bind-param-added-ids="#playlist.ids"
+    bind-param-active-item="#playlist.activeItem"
     bind-statement-1="$(thisElem).toggle(#currentPage == 'SEARCH')"
     bind-event-select="playlist.play(event.data)"
-    bind-event-add="playlist.toggle(event.data)">
+    bind-event-toggle="playlist.toggle(event.data)">
   </div>
   <div bind-view="PlaylistPage"
     bind-param-items="#playlist.items"
+    bind-param-active-item="#playlist.activeItem"
     bind-statement-1="$(thisElem).toggle(#currentPage == 'PLAYLIST')"
     bind-event-select="playlist.play(event.data)"
-    bind-event-remove="playlist.toggle(event.data)">
+    bind-event-remove="playlist.remove(event.data)">
   </div>
 </body>
 </html>
