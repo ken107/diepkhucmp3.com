@@ -4,33 +4,95 @@
   <title>DiepKhuc MP3</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Nghe nhạc, tìm nhạc, playlist">
+  <meta name="description" content="Tìm nhạc, nghe nhạc, download MP3">
   <meta property="og:title" content="DiepKhuc MP3">
-  <meta property="og:description" content="Nghe nhạc, tìm nhạc, playlist">
+  <meta property="og:description" content="Tìm nhạc, nghe nhạc, download MP3">
 
   <link rel="stylesheet" href="css/pack.css">
   <script src="js/pack.js"></script>
 </head>
 <body>
-  <div bind-view="NavBar"
-    bind-param-show-search-button="#currentPage != 'SEARCH'"
-    bind-param-show-playlist-button="#currentPage != 'PLAYLIST' && #playlist.items.length > 0"
-    bind-event-search="currentPage = 'SEARCH'"
-    bind-event-playlist="currentPage = 'PLAYLIST'">
+  <nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">DiepKhuc MP3</a>
+  </nav>
+
+  <div class="page"
+    bind-statement-1="this.printStateTransition(#state)">
+    <table class="content"
+      bind-statement-1="$(thisElem).toggle(#state == 'IDLE')">
+      <tr>
+        <td>
+          Nhấn nút đỏ<br/>
+          và đọc tên bài hát
+        </td>
+      </tr>
+    </table>
+
+    <table class="content"
+      bind-statement-1="$(thisElem).toggle(#state == 'ACQUIRING' || #state == 'ACQUIRING_CANCELED')">
+      <tr>
+        <td>
+          Đang chờ Micro
+        </td>
+      </tr>
+    </table>
+
+    <table class="content"
+      bind-statement-1="$(thisElem).toggle(#state == 'RECORDING')">
+      <tr>
+        <td>
+          Đang nghe
+        </td>
+      </tr>
+    </table>
+
+    <table class="content"
+      bind-statement-1="$(thisElem).toggle(#state == 'RECORDING_STOPPING' || #state == 'SEARCHING')">
+      <tr>
+        <td>
+          <img src="img/ajax_loader_gray_128.gif" />
+        </td>
+      </tr>
+    </table>
+
+    <div class="content"
+      bind-statement-1="$(thisElem).toggle(#state == 'RESULT')">
+      <div class="alert alert-success mb-0"
+        bind-statement-1="$(thisElem).toggle(!!#query)">
+        <i class="material-icons" style="font-size: inherit; vertical-align: middle;">search</i>
+        &quot;<span id="query">{{#query}}</span>&quot;
+      </div>
+      <div class="alert alert-warning mb-0"
+        bind-statement-1="$(thisElem).toggle(!#query)">
+        <span>Hổng nghe gì hết, xin xem lại micro.</span>
+      </div>
+      <ul class="list-group">
+        <li class="list-group-item"
+          bind-repeater-i="#items.length"
+          bind-var-item="#items[#i]"
+          bind-statement-1="$(thisElem).toggleClass('active', #item.id == #activeItem.id)"
+          bind-event-click="#activeItem = #item">
+          <div>{{#item.title}}</div>
+          <div class="buttons"
+            bind-statement-1="$(thisElem).toggle(#activeItem == #item)">
+            <i class="material-icons icon-32">pause_circle_outline</i>
+            <i class="material-icons icon-32">file_download</i>
+          </div>
+          <div class="playback-time"
+            bind-statement-1="$(thisElem).toggle(#activeItem == #item)">
+            1:00 / 2:30
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
-  <div bind-view="SearchPage"
-    bind-param-added-ids="#playlist.ids"
-    bind-param-active-item="#playlist.activeItem"
-    bind-statement-1="$(thisElem).toggle(#currentPage == 'SEARCH')"
-    bind-event-select="playlist.play(event.data)"
-    bind-event-toggle="playlist.toggle(event.data)">
-  </div>
-  <div bind-view="PlaylistPage"
-    bind-param-items="#playlist.items"
-    bind-param-active-item="#playlist.activeItem"
-    bind-statement-1="$(thisElem).toggle(#currentPage == 'PLAYLIST')"
-    bind-event-select="playlist.play(event.data)"
-    bind-event-remove="playlist.remove(event.data)">
-  </div>
+
+  <nav class="navbar navbar-dark fixed-bottom bg-light">
+    <button type="button" class="btn btn-danger btn-block btn-record"
+      bind-event-mousedown="this.startRecording(event)"
+      bind-event-touchstart="this.startRecording(event)">
+      <i class="material-icons">mic</i>
+    </button>
+  </nav>
 </body>
 </html>
