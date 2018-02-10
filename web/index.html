@@ -9,6 +9,7 @@
   <meta property="og:description" content="Tìm nhạc, nghe nhạc, download MP3">
 
   <link rel="stylesheet" href="css/pack.css">
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
   <script src="js/pack.js"></script>
 </head>
 <body>
@@ -75,12 +76,26 @@
           <div>{{#item.title}}</div>
           <div class="buttons"
             bind-statement-1="$(thisElem).toggle(#activeItem == #item)">
-            <i class="material-icons icon-32">pause_circle_outline</i>
-            <i class="material-icons icon-32">file_download</i>
+            <i class="material-icons icon-32"
+              bind-statement-1="$(thisElem).toggle(#playbackItem == #item && #playbackState == 'PLAYING')"
+              bind-event-click="this.pauseIt()">
+              pause_circle_outline
+            </i>
+            <i class="material-icons icon-32"
+              bind-statement-1="$(thisElem).toggle(#playbackItem != #item || #playbackState == 'STOPPED')"
+              bind-event-click="this.playIt()">
+              play_circle_outline
+            </i>
+            <i class="material-icons icon-32">
+              file_download
+            </i>
           </div>
           <div class="playback-time"
             bind-statement-1="$(thisElem).toggle(#activeItem == #item)">
-            1:00 / 2:30
+            <span bind-statement-1="$(thisElem).toggle(#playbackItem == #item && #playbackState == 'LOADING')">loading...</span>
+            <span bind-statement-1="$(thisElem).toggle(#playbackItem == #item && #playbackState != 'LOADING')">
+              {{this.printPlaybackTime(#playbackTime) + ' / ' + this.printPlaybackTime(this.audio.duration)}}
+            </span>
           </div>
         </li>
       </ul>

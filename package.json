@@ -2,7 +2,7 @@
   "scripts": {
     "build": "node build.js build",
     "start": "http-server build",
-    "deploy": "aws s3 sync --profile=s3 --delete --metadata-directive REPLACE --cache-control max-age=1800,public build s3://diepkhucmp3.com"
+    "deploy": "aws s3 sync --profile=s3 --delete --metadata-directive REPLACE --cache-control no-cache build s3://diepkhucmp3.com"
   },
   "devDependencies": {
     "uglify-js": "^3.3.3"

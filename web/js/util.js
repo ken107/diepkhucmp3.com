@@ -1,29 +1,14 @@
 
-window.AudioContext = window.AudioContext || window.webkitAudioContext;
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-
-function getUserMedia(options) {
-  return new Promise(function(fulfill, reject) {
-    navigator.getUserMedia(options, fulfill, reject);
-  })
-}
+if (!window.AudioContext) window.AudioContext = window.webkitAudioContext;
 
 function getMicrophone() {
-  return getUserMedia({
-    "audio": {
-      "mandatory": {
-        "googEchoCancellation": "false",
-        "googAutoGainControl": "false",
-        "googNoiseSuppression": "false",
-        "googHighpassFilter": "false"
-      },
-      "optional": []
-    },
+  return navigator.mediaDevices.getUserMedia({
+    "audio": true,
+    "video": false
   })
 }
 
-function startCapture(microphone) {
-  var audioContext = window.myAudioContext || (window.myAudioContext = new AudioContext());
+function startCapture(audioContext, microphone) {
   var source = audioContext.createMediaStreamSource(microphone);
   var capture = audioContext.createScriptProcessor(8192, 1, 1);
   var chunks = [];
