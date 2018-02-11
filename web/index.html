@@ -19,6 +19,18 @@
 
   <div class="page"
     bind-statement-1="this.printStateTransition(#state)">
+
+    <table class="content approve"
+      bind-statement-1="$(thisElem).toggle(#state == 'STARTUP')">
+      <tr>
+        <td>
+          <div>Dịch vụ này sẽ sử dụng microphone của bạn.</div>
+          <button type="button" class="btn btn-primary"
+            bind-event-click="this.handleEvent('onApprove')">Cho Phép</button>
+        </td>
+      </tr>
+    </table>
+
     <table class="content"
       bind-statement-1="$(thisElem).toggle(#state == 'IDLE')">
       <tr>
@@ -38,7 +50,7 @@
       </tr>
     </table>
 
-    <table class="content"
+    <table class="content recording"
       bind-statement-1="$(thisElem).toggle(#state == 'RECORDING')">
       <tr>
         <td>
@@ -102,7 +114,8 @@
     </div>
   </div>
 
-  <nav class="navbar navbar-dark fixed-bottom bg-light">
+  <nav class="navbar navbar-dark fixed-bottom bg-light"
+    bind-statement-1="$(thisElem).toggle(#state != 'STARTUP')">
     <button type="button" class="btn btn-danger btn-block btn-record"
       bind-event-mousedown="this.startRecording(event)"
       bind-event-touchstart="this.startRecording(event)">

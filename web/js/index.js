@@ -1,5 +1,22 @@
 
 var states = {
+  STARTUP: {
+    onApprove: function() {
+      assert(window.AudioContext);
+      this.audioContext = new AudioContext();
+      this.audio.src = "sounds/silence.mp3";
+      this.audio.play();
+      getMicrophone()
+        .then(function(mic) {
+          if (mic) {
+            closeMicrophone(mic);
+            this.state = "IDLE";
+          }
+          else console.error("Rejected");
+        })
+        .catch(console.error)
+    }
+  },
   IDLE: {
     onStartRecording: function() {
       this.state = "ACQUIRING";
@@ -19,7 +36,7 @@ var states = {
   },
   ACQUIRING_CANCELED: {
     onMicrophone: function(microphone) {
-      microphone.getTracks().forEach(callMethod("stop"));
+      closeMicrophone(microphone);
       this.state = "IDLE";
     }
   },
@@ -48,7 +65,7 @@ var states = {
     onSearchResult: function(result) {
       this.state = "RESULT";
       this.query = result.query;
-      this.items = result.results;
+      this.items = result.query ? result.results : [];
       if (this.query && this.items.length && this.isExactMatch(this.items[0].title, this.query)) {
         this.activeItem = this.items[0];
         this.playIt();
@@ -61,7 +78,8 @@ var states = {
 };
 
 states.RESULT = states.IDLE;
-this.state = "IDLE";
+
+this.state = "STARTUP";
 this.query = null;
 this.items = null;
 this.activeItem = null;
@@ -76,18 +94,6 @@ this.audio.ontimeupdate = (function() {this.playbackTime = Math.round(this.audio
 this.startRecording = function(event) {
   if (!this.primaryInterface) this.primaryInterface = event.type;
   if (event.type == this.primaryInterface) {
-    //audioContext must be created by user action
-    if (!this.audioContext) {
-      assert(window.AudioContext);
-      this.audioContext = new AudioContext();
-    }
-
-    //first-time activate audio element by user action
-    if (!this.audio.src) {
-      this.audio.src = "sounds/silence.mp3";
-      this.audio.play();
-    }
-
     this.handleEvent("onStartRecording");
     if (event.type == "mousedown") $("body").one("mouseup", this.handleEvent.bind(this, "onStopRecording"));
     if (event.type == "touchstart") $("body").one("touchend", this.handleEvent.bind(this, "onStopRecording"));

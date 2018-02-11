@@ -8,6 +8,10 @@ function getMicrophone() {
   })
 }
 
+function closeMicrophone(mic) {
+  mic.getTracks().forEach(callMethod("stop"));
+}
+
 function startCapture(audioContext, microphone) {
   var source = audioContext.createMediaStreamSource(microphone);
   var capture = audioContext.createScriptProcessor(8192, 1, 1);

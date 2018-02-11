@@ -24,6 +24,17 @@ body {
   text-align: center;
   text-shadow: 1px 1px 0 white;
 }
+.page > table.content.approve {
+  font-size: x-large;
+  color: #666;
+}
+.page > table.content.approve button {
+  margin-top: 50px;
+  font-size: x-large;
+}
+.page > table.content.recording {
+  color: #090;
+}
 
 button {
   cursor: pointer;
