@@ -20,7 +20,7 @@ exports.copyHTML = async function() {
 exports.buildJS = async function() {
   await fs.mkdir("build/js", err => "OK");
 
-  const jsFiles = ["jquery.js", "popper.js", "bootstrap.js", "databind.js", "util.js", "components.js", "index.js"].map(file => `web/js/${file}`);
+  const jsFiles = ["jquery.js", "popper.js", "bootstrap.js", "bootstrap-slider.js", "databind.js", "util.js", "components.js", "index.js"].map(file => `web/js/${file}`);
   const outFile = "build/js/pack.js";
   const outFileMin = "build/js/pack.min.js";
 
@@ -38,7 +38,7 @@ exports.buildJS = async function() {
 exports.buildCSS = async function() {
   await fs.mkdir("build/css", err => "OK");
 
-  const files = ["bootstrap.css", "common.css", "components.css", "index.css"].map(file => `web/css/${file}`);
+  const files = ["bootstrap.css", "bootstrap-slider.css", "common.css", "components.css", "index.css"].map(file => `web/css/${file}`);
   const outFile = "build/css/pack.css";
   const outFileMin = "build/css/pack.min.css";
 

@@ -138,6 +138,10 @@ this.pauseIt = function() {
   this.audio.pause();
 }
 
+this.downloadIt = function() {
+  location.href = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.playbackItem.id + "/" + encodeURIComponent(this.playbackItem.title) + ".webm";
+}
+
 this.printPlaybackTime = function(time) {
   if (!time) return '00:00';
   time = Math.round(time);
