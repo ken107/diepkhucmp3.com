@@ -18,6 +18,7 @@ var states = {
   },
   IDLE: {
     onStartRecording: function() {
+      this.stopIt();
       this.state = "ACQUIRING";
       getMicrophone().then(this.handleEvent.bind(this, "onMicrophone"));
     }
@@ -117,8 +118,8 @@ this.voiceSearch = function(audioChunks) {
 }
 
 this.isExactMatch = function(title, query) {
-  const tokens = title.toUpperCase().split(/\W+/);
-  return query.toUpperCase().split(/\W+/)
+  const tokens = removeDiacritics(title).toUpperCase().split(/\s+/);
+  return removeDiacritics(query).toUpperCase().split(/\s+/)
     .every(function(token) {
       return tokens.indexOf(token) != -1;
     })
@@ -135,6 +136,12 @@ this.playIt = function() {
 
 this.pauseIt = function() {
   this.audio.pause();
+}
+
+this.stopIt = function() {
+  this.playbackItem = null;
+  this.audio.src = "";
+  this.audio.load();
 }
 
 this.downloadIt = function() {
