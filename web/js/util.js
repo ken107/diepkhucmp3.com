@@ -1,4 +1,6 @@
 
+var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
 function getMicrophone() {
   return navigator.mediaDevices.getUserMedia({
     "audio": true,

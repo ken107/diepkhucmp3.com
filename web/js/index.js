@@ -127,7 +127,7 @@ this.isExactMatch = function(title, query) {
 this.playIt = function() {
   if (this.playbackItem != this.activeItem) {
     this.playbackItem = this.activeItem;
-    this.audio.src = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.playbackItem.id;
+    this.audio.src = this.getDownloadUrl(this.activeItem);
     this.playbackState = 'LOADING';
   }
   this.audio.play();
@@ -138,11 +138,16 @@ this.pauseIt = function() {
 }
 
 this.downloadIt = function() {
-  location.href = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.playbackItem.id + "/" + encodeURIComponent(this.playbackItem.title) + ".webm";
+  location.href = this.getDownloadUrl(this.activeItem);
+}
+
+this.getDownloadUrl = function(item) {
+  var ext = iOS ? ".aac" : ".m4a";
+  return "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + item.id + "/" + encodeURIComponent(item.title) + ext;
 }
 
 this.printPlaybackTime = function(time) {
-  if (!time) return '00:00';
+  if (!time || time == Infinity) return '00:00';
   time = Math.round(time);
   var min = Math.floor(time / 60);
   var sec = time % 60;
