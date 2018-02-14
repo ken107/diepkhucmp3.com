@@ -2,8 +2,7 @@
 var states = {
   STARTUP: {
     onApprove: function() {
-      assert(window.AudioContext);
-      this.audioContext = new AudioContext();
+      this.audioCapture = new AudioCapture();
       this.audio.src = "sounds/silence.mp3";
       this.audio.play();
       getMicrophone()
@@ -27,7 +26,7 @@ var states = {
     onMicrophone: function(microphone) {
       this.state = "RECORDING";
       this.microphone = microphone;
-      this.capture = startCapture(this.audioContext, microphone);
+      this.audioCapture.start(microphone);
       this.capturingSince = new Date().getTime();
     },
     onStopRecording: function() {
@@ -49,14 +48,14 @@ var states = {
         setTimeout(this.handleEvent.bind(this, "onRecordingStopped"), 500);
       }
       else {
-        this.capture.finish();
+        this.audioCapture.finish();
         this.state = "IDLE";
       }
     }
   },
   RECORDING_STOPPING: {
     onRecordingStopped: function() {
-      var audioChunks = this.capture.finish();
+      var audioChunks = this.audioCapture.finish();
       this.state = "SEARCHING";
       this.voiceSearch(audioChunks).then(this.handleEvent.bind(this, "onSearchResult"));
     }

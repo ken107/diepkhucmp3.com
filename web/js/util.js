@@ -1,6 +1,4 @@
 
-if (!window.AudioContext) window.AudioContext = window.webkitAudioContext;
-
 function getMicrophone() {
   return navigator.mediaDevices.getUserMedia({
     "audio": true,
@@ -12,22 +10,34 @@ function closeMicrophone(mic) {
   mic.getTracks().forEach(callMethod("stop"));
 }
 
-function startCapture(audioContext, microphone) {
-  var source = audioContext.createMediaStreamSource(microphone);
-  var capture = audioContext.createScriptProcessor(8192, 1, 1);
+/**
+ * Must be called on user action for iOS to work
+ */
+function AudioCapture() {
+  var AudioContext = window.AudioContext || window.webkitAudioContext;
+  var context = new AudioContext();
+  var source;
+  var capture = context.createScriptProcessor(8192, 1, 1);
   var chunks = [];
   capture.onaudioprocess = function(event) {
     chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
   };
-  source.connect(capture);
-  capture.connect(audioContext.destination);
-  return {
-    finish: function() {
-      source.disconnect();
-      capture.disconnect();
-      return chunks;
-    }
-  }
+  capture.connect(context.destination);
+  context.resume();
+
+  this.start = function(microphone) {
+    assert(!source);
+    source = context.createMediaStreamSource(microphone);
+    source.connect(capture);
+  };
+
+  this.finish = function() {
+    source.disconnect();
+    source = null;
+    var result = chunks;
+    chunks = [];
+    return result;
+  };
 }
 
 function ajaxPut(sUrl, oData) {
@@ -78,5 +88,9 @@ function callMethod(name, args) {
 }
 
 function assert(truth) {
-  if (!truth) alert(new Error("Assertion failed").stack);
+  if (!truth) {
+    var err = new Error("Assertion failed");
+    alert(err.stack);
+    throw err;
+  }
 }
