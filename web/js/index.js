@@ -128,7 +128,7 @@ this.isExactMatch = function(title, query) {
 this.playIt = function() {
   if (this.playbackItem != this.activeItem) {
     this.playbackItem = this.activeItem;
-    this.audio.src = this.getDownloadUrl(this.activeItem);
+    this.audio.src = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.activeItem.id + "/file" + (iOS ? ".m3u8" : ".m4a");
     this.playbackState = 'LOADING';
   }
   this.audio.play();
@@ -145,12 +145,7 @@ this.stopIt = function() {
 }
 
 this.downloadIt = function() {
-  location.href = this.getDownloadUrl(this.activeItem);
-}
-
-this.getDownloadUrl = function(item) {
-  var ext = iOS ? ".aac" : ".m4a";
-  return "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + item.id + "/" + encodeURIComponent(item.title) + ext;
+  location.href = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.activeItem.id + "/" + encodeURIComponent(this.activeItem.title) + ".m4a?attachment";
 }
 
 this.printPlaybackTime = function(time) {
