@@ -22,24 +22,27 @@ function AudioCapture() {
   var context = new AudioContext();
   var source;
   var capture = context.createScriptProcessor(8192, 1, 1);
-  var chunks = [];
+  var chunks;
   capture.onaudioprocess = function(event) {
-    chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
+    if (chunks) chunks.push(new Float32Array(event.inputBuffer.getChannelData(0)));
   };
   capture.connect(context.destination);
-  context.resume();
+  context.suspend();
 
   this.start = function(microphone) {
     assert(!source);
     source = context.createMediaStreamSource(microphone);
     source.connect(capture);
+    chunks = [];
+    context.resume();
   };
 
   this.finish = function() {
+    context.suspend();
     source.disconnect();
     source = null;
     var result = chunks;
-    chunks = [];
+    chunks = null;
     return result;
   };
 }
