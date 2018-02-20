@@ -65,7 +65,8 @@ var states = {
     onSearchResult: function(result) {
       this.state = "RESULT";
       this.query = result.query;
-      this.items = result.query ? result.results : [];
+      this.items = result.items;
+      this.nextPageToken = result.nextPageToken;
       if (this.query && this.items.length && this.isExactMatch(this.items[0].title, this.query)) {
         this.activeItem = this.items[0];
         this.playIt();
@@ -113,8 +114,18 @@ this.handleEvent = function(name) {
 
 this.voiceSearch = function(audioChunks) {
   var output = normalizeToS16(downSample(audioChunks, 3));
-  return ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search", new Blob([output]))
+  return ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search?sampleRate=16000&lang=vi-VI&maxResults=10", new Blob([output]))
     .then(JSON.parse)
+}
+
+this.loadMore = function() {
+  var self = this;
+  return ajaxGet("https://support.lsdsoftware.com/diepkhuc-mp3/next-search-results?query=" + encodeURIComponent(this.query) + "&maxResults=25&pageToken=" + encodeURIComponent(this.nextPageToken))
+    .then(JSON.parse)
+    .then(function(result) {
+      self.items.push.apply(self.items, result.items);
+      self.nextPageToken = result.nextPageToken;
+    })
 }
 
 this.isExactMatch = function(title, query) {

@@ -47,6 +47,20 @@ function AudioCapture() {
   };
 }
 
+function ajaxGet(sUrl) {
+  return new Promise(function(fulfill, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", sUrl, true);
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status == 200) fulfill(xhr.responseText);
+        else reject(new Error(xhr.responseText));
+      }
+    };
+    xhr.send(null);
+  })
+}
+
 function ajaxPut(sUrl, oData) {
   return new Promise(function(fulfill, reject) {
     var xhr = new XMLHttpRequest();
