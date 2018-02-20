@@ -91,6 +91,7 @@ this.audio = document.createElement('AUDIO');
 this.audio.onplaying = (function() {this.playbackState = 'PLAYING'}).bind(this);
 this.audio.onpause = (function() {this.playbackState = 'STOPPED'}).bind(this);
 this.audio.ontimeupdate = (function() {this.playbackTime = Math.round(this.audio.currentTime)}).bind(this);
+this.isLoadingMore = false;
 
 this.startRecording = function(event) {
   if (!this.primaryInterface) this.primaryInterface = event.type;
@@ -120,9 +121,12 @@ this.voiceSearch = function(audioChunks) {
 
 this.loadMore = function() {
   var self = this;
+  if (this.isLoadingMore) return;
+  this.isLoadingMore = true;
   return ajaxGet("https://support.lsdsoftware.com/diepkhuc-mp3/next-search-results?query=" + encodeURIComponent(this.query) + "&maxResults=25&pageToken=" + encodeURIComponent(this.nextPageToken))
     .then(JSON.parse)
     .then(function(result) {
+      self.isLoadingMore = false;
       self.items.push.apply(self.items, result.items);
       self.nextPageToken = result.nextPageToken;
     })
