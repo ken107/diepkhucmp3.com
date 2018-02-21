@@ -60,3 +60,16 @@ button > .material-icons {
   height: 32px;
   float: right;
 }
+
+.navbar.fixed-bottom {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.btn-record {
+  width: 85%;
+}
+.btn-lang {
+  width: 14%;
+  padding-left: 0;
+  padding-right: 0;
+}

@@ -93,6 +93,7 @@ this.audio.onpause = (function() {this.playbackState = 'STOPPED'}).bind(this);
 this.audio.ontimeupdate = (function() {this.playbackTime = Math.round(this.audio.currentTime)}).bind(this);
 this.isLoadingMore = false;
 this.feedbackDialog = {};
+this.lang = "VI";
 
 this.startRecording = function(event) {
   if (!this.primaryInterface) this.primaryInterface = event.type;
@@ -116,7 +117,8 @@ this.handleEvent = function(name) {
 
 this.voiceSearch = function(audioChunks) {
   var output = normalizeToS16(downSample(audioChunks, 3));
-  return ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search?sampleRate=16000&lang=vi-VI&maxResults=10", new Blob([output]))
+  var lang = this.lang == "VI" ? "vi-VI" : "en-US";
+  return ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search?sampleRate=16000&lang=" + lang + "&maxResults=10", new Blob([output]))
     .then(JSON.parse)
 }
 
@@ -206,4 +208,9 @@ this.submitFeedback = function() {
 
 this.cancelFeedback = function() {
   this.feedbackDialog.visible = false;
+}
+
+this.toggleLang = function() {
+  if (this.lang == 'VI') this.lang = 'EN';
+  else this.lang = 'VI';
 }

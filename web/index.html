@@ -30,7 +30,7 @@
 <body>
   <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand mr-auto" href="#">DiepKhuc MP3</a>
-    <button class="btn btn-secondary"
+    <button class="btn"
       bind-event-click="this.showFeedbackDialog()">Báo lỗi</button>
   </nav>
 
@@ -52,7 +52,7 @@
       bind-statement-1="$(thisElem).toggle(#state == 'IDLE')">
       <tr>
         <td>
-          Nhấn nút đỏ<br/>
+          Nhấn giữ nút đỏ<br/>
           và đọc tên bài hát
         </td>
       </tr>
@@ -62,7 +62,8 @@
       bind-statement-1="$(thisElem).toggle(#state == 'ACQUIRING' || #state == 'ACQUIRING_CANCELED')">
       <tr>
         <td>
-          Đang chờ Micro
+          Đợi tí...<br/>
+          để mở micro
         </td>
       </tr>
     </table>
@@ -71,7 +72,7 @@
       bind-statement-1="$(thisElem).toggle(#state == 'RECORDING')">
       <tr>
         <td>
-          Đang nghe
+          OK, bạn đọc đi
         </td>
       </tr>
     </table>
@@ -146,10 +147,14 @@
 
   <nav class="navbar navbar-dark fixed-bottom bg-light"
     bind-statement-1="$(thisElem).toggle(#state != 'STARTUP')">
-    <button type="button" class="btn btn-danger btn-block btn-record"
+    <button type="button" class="btn btn-danger btn-record"
       bind-event-mousedown="this.startRecording(event)"
       bind-event-touchstart="this.startRecording(event)">
       <i class="material-icons">mic</i>
+    </button>
+    <button type="button" class="btn btn-secondary btn-lang"
+      bind-event-click="this.toggleLang()">
+      {{#lang}}
     </button>
   </nav>
 </body>
