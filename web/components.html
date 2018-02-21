@@ -1,1 +1,33 @@
- 
+
+<div data-class="FeedbackDialog" class="feedback-dialog modal fade"
+  bind-statement-1="$(thisElem).modal({show: false})"
+  bind-statement-2="$(thisElem).modal(#visible ? 'show' : 'hide')"
+  bind-var-view-root="thisElem">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Báo Lỗi / Góp Ý</h5>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="comment">Comment</label>
+          <textarea class="form-control" id="comment"
+            bind-statement-1="$(thisElem).val(#formData.comment)"
+            bind-event-change="#formData.comment = $(thisElem).val()"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="email">Email (optional)</label>
+          <input type="text" class="form-control" id="email"
+            bind-statement-1="$(thisElem).val(#formData.email)"
+            bind-event-change="#formData.email = $(thisElem).val()"/>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary"
+          bind-event-click="$(#viewRoot).triggerHandler('submit')">Submit</button>
+        <button type="button" class="btn btn-secondary"
+          bind-event-click="$(#viewRoot).triggerHandler('cancel')">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>

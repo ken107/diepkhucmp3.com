@@ -92,6 +92,7 @@ this.audio.onplaying = (function() {this.playbackState = 'PLAYING'}).bind(this);
 this.audio.onpause = (function() {this.playbackState = 'STOPPED'}).bind(this);
 this.audio.ontimeupdate = (function() {this.playbackTime = Math.round(this.audio.currentTime)}).bind(this);
 this.isLoadingMore = false;
+this.feedbackDialog = {};
 
 this.startRecording = function(event) {
   if (!this.primaryInterface) this.primaryInterface = event.type;
@@ -178,3 +179,31 @@ window.oncontextmenu = function(event) {
   event.stopPropagation();
   return false;
 };
+
+this.showFeedbackDialog = function() {
+  this.feedbackDialog.formData = {comment: "", email: ""};
+  this.feedbackDialog.visible = true;
+}
+
+this.submitFeedback = function() {
+  var self = this;
+  $.ajax("https://support.lsdsoftware.com/lsdsoftware/submit-feedback", {
+    method: "POST",
+    data: JSON.stringify({
+      subject: "DiepKhuc MP3",
+      body: this.feedbackDialog.formData.comment,
+      from: this.feedbackDialog.formData.email
+    }),
+    contentType: "application/json",
+    success: function() {
+      self.feedbackDialog.visible = false;
+    },
+    error: function() {
+      self.feedbackDialog.visible = false;
+    }
+  })
+}
+
+this.cancelFeedback = function() {
+  this.feedbackDialog.visible = false;
+}

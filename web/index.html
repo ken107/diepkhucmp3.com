@@ -29,7 +29,9 @@
 </head>
 <body>
   <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">DiepKhuc MP3</a>
+    <a class="navbar-brand mr-auto" href="#">DiepKhuc MP3</a>
+    <button class="btn btn-secondary"
+      bind-event-click="this.showFeedbackDialog()">Báo lỗi</button>
   </nav>
 
   <div class="page"
@@ -127,11 +129,19 @@
           </div>
         </li>
         <li class="list-group-item"
+          bind-statement-1="$(thisElem).toggle(!!#query)"
           bind-event-click="this.loadMore()">
           {{#isLoadingMore ? "Loading more" : "More"}}...
         </li>
       </ul>
     </div>
+  </div>
+
+  <div bind-view="FeedbackDialog"
+    bind-param-visible="#feedbackDialog.visible"
+    bind-param-form-data="#feedbackDialog.formData"
+    bind-event-submit="this.submitFeedback()"
+    bind-event-cancel="this.cancelFeedback()">
   </div>
 
   <nav class="navbar navbar-dark fixed-bottom bg-light"

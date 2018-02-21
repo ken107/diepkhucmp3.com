@@ -6,3 +6,6 @@ $("<div/>").load("components.html", function() {
     else throw new Error("Class not found " + className);
   })
 })
+
+function FeedbackDialog() {
+}
