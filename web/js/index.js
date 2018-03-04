@@ -146,7 +146,9 @@ this.isExactMatch = function(title, query) {
 this.playIt = function() {
   if (this.playbackItem != this.activeItem) {
     this.playbackItem = this.activeItem;
-    this.audio.src = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.activeItem.id + "/file" + (iOS ? ".m3u8" : ".m4a");
+    if (this.activeItem.type == 1) this.audio.src = "http://sing.datviet.com/mp3/" + this.activeItem.id + ".mp3";
+    else if (this.activeItem.type == 2) this.audio.src = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.activeItem.id + "/file" + (iOS ? ".m3u8" : ".m4a");
+    else alert("What the hell!");
     this.playbackState = 'LOADING';
   }
   this.audio.play();
