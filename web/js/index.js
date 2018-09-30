@@ -118,16 +118,46 @@ this.handleEvent = function(name) {
 this.voiceSearch = function(audioChunks) {
   var output = normalizeToS16(downSample(audioChunks, 3));
   var lang = this.lang == "VI" ? "vi-VI" : "en-US";
-  return ajaxPut("https://support.lsdsoftware.com/diepkhuc-mp3/voice-search?sampleRate=16000&lang=" + lang + "&maxResults=10", new Blob([output]))
-    .then(JSON.parse)
+  return new Promise(function(fulfill, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://support.lsdsoftware.com:30299/diepkhuc-mp3?capabilities=voiceSearch-1.0", true);
+    xhr.setRequestHeader("x-service-request-header", JSON.stringify({
+      method: "voiceSearch",
+      sampleRate: 16000,
+      lang: lang,
+      maxResults: 10
+    }))
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status == 200) fulfill(JSON.parse(xhr.responseText));
+        else reject(new Error(xhr.responseText));
+      }
+    };
+    xhr.send(new Blob([output]));
+  })
 }
 
 this.loadMore = function() {
   var self = this;
   if (this.isLoadingMore) return;
   this.isLoadingMore = true;
-  return ajaxGet("https://support.lsdsoftware.com/diepkhuc-mp3/next-search-results?query=" + encodeURIComponent(this.query) + "&maxResults=25&pageToken=" + encodeURIComponent(this.nextPageToken))
-    .then(JSON.parse)
+  return new Promise(function(fulfill, reject) {
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://support.lsdsoftware.com:30299/diepkhuc-mp3?capabilities=search-1.0", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == XMLHttpRequest.DONE) {
+        if (xhr.status == 200) fulfill(JSON.parse(xhr.responseText));
+        else reject(new Error(xhr.responseText));
+      }
+    };
+    xhr.send(JSON.stringify({
+      method: "search",
+      query: self.query,
+      maxResults: 25,
+      pageToken: self.nextPageToken
+    }))
+  })
     .then(function(result) {
       self.isLoadingMore = false;
       self.items.push.apply(self.items, result.items);
@@ -190,20 +220,26 @@ this.showFeedbackDialog = function() {
 }
 
 this.submitFeedback = function() {
+  if (!this.feedbackDialog.formData.comment) {
+    this.feedbackDialog.formData.error = "Please enter a comment";
+    return;
+  }
   var self = this;
-  $.ajax("https://support.lsdsoftware.com/lsdsoftware/submit-feedback", {
+  $.ajax({
     method: "POST",
+    url: "https://support.lsdsoftware.com:30299/lsdsoftware?capabilities=submitFeedback-1.0",
     data: JSON.stringify({
+      method: "submitFeedback",
       subject: "DiepKhuc MP3",
-      body: this.feedbackDialog.formData.comment,
-      from: this.feedbackDialog.formData.email
+      message: this.feedbackDialog.formData.comment,
+      email: this.feedbackDialog.formData.email
     }),
     contentType: "application/json",
     success: function() {
       self.feedbackDialog.visible = false;
     },
     error: function() {
-      self.feedbackDialog.visible = false;
+      self.feedbackDialog.formData.error = "Failed to send feedback, please email us at admin&#64;lsdsoftware.com";
     }
   })
 }

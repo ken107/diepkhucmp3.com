@@ -21,6 +21,8 @@
             bind-statement-1="$(thisElem).val(#formData.email)"
             bind-event-change="#formData.email = $(thisElem).val()"/>
         </div>
+        <div class="alert alert-danger"
+          bind-statement-1="$(thisElem).toggle(!!#formData.error)">{{#formData.error}}</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary"
