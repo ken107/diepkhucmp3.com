@@ -1,3 +1,4 @@
+var serviceUrl = "https://service.lsdsoftware.com";
 
 var states = {
   STARTUP: {
@@ -120,7 +121,7 @@ this.voiceSearch = function(audioChunks) {
   var lang = this.lang == "VI" ? "vi-VI" : "en-US";
   return new Promise(function(fulfill, reject) {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://support.lsdsoftware.com:30299/diepkhuc-mp3?capabilities=voiceSearch-1.0", true);
+    xhr.open("POST", serviceUrl + "/diepkhuc-mp3?capabilities=voiceSearch-1.0", true);
     xhr.setRequestHeader("x-service-request-header", JSON.stringify({
       method: "voiceSearch",
       sampleRate: 16000,
@@ -143,7 +144,7 @@ this.loadMore = function() {
   this.isLoadingMore = true;
   return new Promise(function(fulfill, reject) {
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://support.lsdsoftware.com:30299/diepkhuc-mp3?capabilities=search-1.0", true);
+    xhr.open("POST", serviceUrl + "/diepkhuc-mp3?capabilities=search-1.0", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function() {
       if (xhr.readyState == XMLHttpRequest.DONE) {
@@ -227,7 +228,7 @@ this.submitFeedback = function() {
   var self = this;
   $.ajax({
     method: "POST",
-    url: "https://support.lsdsoftware.com:30299/lsdsoftware?capabilities=submitFeedback-1.0",
+    url: serviceUrl + "/lsdsoftware?capabilities=submitFeedback-1.0",
     data: JSON.stringify({
       method: "submitFeedback",
       subject: "DiepKhuc MP3",
