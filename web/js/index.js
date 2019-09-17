@@ -177,12 +177,24 @@ this.isExactMatch = function(title, query) {
 this.playIt = function() {
   if (this.playbackItem != this.activeItem) {
     this.playbackItem = this.activeItem;
-    if (this.activeItem.type == 1) this.audio.src = "http://sing.datviet.com/mp3/" + this.activeItem.id + ".mp3";
-    else if (this.activeItem.type == 2) this.audio.src = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.activeItem.id + "/file" + (iOS ? ".m3u8" : ".m4a");
-    else alert("What the hell!");
+    this.audio.src = getAudioUrl(this.activeItem);
     this.playbackState = 'LOADING';
   }
   this.audio.play();
+}
+
+this.getAudioUrl = function(item) {
+  switch (item.type) {
+    case 1: return "http://sing.datviet.com/mp3/" + item.id + ".mp3";
+    case 2: return "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + item.id + "/file" + (iOS ? ".m3u8" : ".m4a");
+  }
+}
+
+this.getDownloadUrl = function(item) {
+  switch (item.type) {
+    case 1: return "http://sing.datviet.com/mp3/" + item.id + ".mp3";
+    case 2: return "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + item.id + "/" + encodeURIComponent(item.title) + ".m4a?attachment";
+  }
 }
 
 this.pauseIt = function() {
@@ -193,10 +205,6 @@ this.stopIt = function() {
   this.playbackItem = null;
   this.audio.src = "";
   this.audio.load();
-}
-
-this.downloadIt = function() {
-  location.href = "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + this.activeItem.id + "/" + encodeURIComponent(this.activeItem.title) + ".m4a?attachment";
 }
 
 this.printPlaybackTime = function(time) {

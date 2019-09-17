@@ -115,20 +115,20 @@
           <div>{{#item.title}}</div>
           <div class="buttons"
             bind-statement-1="$(thisElem).toggle(#activeItem == #item)">
-            <i class="material-icons icon-32"
+            <i class="material-icons icon-32" style="cursor: pointer"
               bind-statement-1="$(thisElem).toggle(#playbackItem == #item && #playbackState == 'PLAYING')"
               bind-event-click="this.pauseIt()">
               pause_circle_outline
             </i>
-            <i class="material-icons icon-32"
+            <i class="material-icons icon-32" style="cursor: pointer"
               bind-statement-1="$(thisElem).toggle(#playbackItem != #item || #playbackState == 'STOPPED')"
               bind-event-click="this.playIt()">
               play_circle_outline
             </i>
-            <i class="material-icons icon-32"
-              bind-event-click="this.downloadIt()">
-              file_download
-            </i>
+            <a class="no-style"
+              bind-statement-1="$(thisElem).attr('href', this.getDownloadUrl(#item)).attr('download', #item.title)">
+              <i class="material-icons icon-32">file_download</i>
+            </a>
           </div>
           <div class="playback-time"
             bind-statement-1="$(thisElem).toggle(#activeItem == #item)">

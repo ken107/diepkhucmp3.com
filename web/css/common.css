@@ -38,3 +38,12 @@
 .icon-32 {
   font-size: 32px;
 }
+
+a.no-style:link {
+  text-decoration: inherit;
+  color: inherit;
+}
+a.no-style:visited {
+  text-decoration: inherit;
+  color: inherit;
+}
