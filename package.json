@@ -3,7 +3,7 @@
     "build": "node build.js build",
     "start": "http-server build",
     "deploy-test": "aws s3 sync --profile s3 --delete --metadata-directive REPLACE --acl public-read --cache-control no-cache build s3://lsdsoftware-assets/test-site",
-    "deploy": "aws s3 sync --profile=s3 --delete --metadata-directive REPLACE --cache-control max-age=900,public build s3://diepkhucmp3.com"
+    "deploy": "aws s3 sync --profile=s3 --delete --metadata-directive REPLACE --cache-control max-age=900,public build s3://lsdsoftware-websites/diepkhucmp3.com"
   },
   "devDependencies": {
     "uglify-js": "^3.3.3"
