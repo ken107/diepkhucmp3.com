@@ -185,14 +185,14 @@ this.playIt = function() {
 
 this.getAudioUrl = function(item) {
   switch (item.type) {
-    case 1: return "http://sing.datviet.com/mp3/" + item.id + ".mp3";
+    case 1: return "https://dvkaraoke.com/mp3/" + item.id + ".mp3";
     case 2: return "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + item.id + "/file" + (iOS ? ".m3u8" : ".m4a");
   }
 }
 
 this.getDownloadUrl = function(item) {
   switch (item.type) {
-    case 1: return "http://sing.datviet.com/mp3/" + item.id + ".mp3";
+    case 1: return "https://dvkaraoke.com/mp3/" + item.id + ".mp3";
     case 2: return "https://support2.lsdsoftware.com/diepkhuc-mp3/download/" + item.id + "/" + encodeURIComponent(item.title) + ".m4a?attachment";
   }
 }
